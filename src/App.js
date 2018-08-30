@@ -4,7 +4,7 @@ import './App.css';
 
 let defaultTextColor = 'purple';
 let defaultStyle = {
-  color: defaultTextColor
+  color: 'purple'
 }
 
 class Aggregate extends Component {
@@ -47,12 +47,9 @@ class Playlist extends Component {
 
 class App extends Component {
   render() {
-    let name = 'Michael'
-    let green = 'green'
-    let headerStyle = {color: green, 'font-size': '50px'}
     return (
       <div className="App">
-        <h1>Title</h1>
+        <h1 style={{...defaultStyle, 'font-size': '54px'}}>Title</h1>
         <Aggregate />
         <Aggregate />
         <Filter />
