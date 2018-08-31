@@ -4,14 +4,55 @@ import './App.css';
 
 let defaultTextColor = 'purple';
 let defaultStyle = {
-  color: 'purple'
+  color: 'green'
+}
+let fakeServerData = {
+  user: {
+    name: 'Blake',
+    playlists: [
+      {
+        name: 'My favorites',
+        songs: [{name: 'Perdido En Tus Ojos', duration: 70000}
+      ]
+      },
+      {
+        name: 'Country',
+        songs: [{name: 'I Cross My Heart', duration: 70000}
+      ]
+      },
+      {
+        name: 'Latin',
+        songs: [{name: 'Dont Let Go', duration: 70000}]
+      },
+      {
+        name: 'Work Out',
+        songs: [{name: 'Down', duration: 70000}]
+      }
+    ]
+  }
 }
 
-class Aggregate extends Component {
+class PlayListCounter extends Component {
   render() {
     return (
       <div style={{...defaultStyle, width: '40%', display: 'inline-block'}}>
-        <h2>Number Text</h2>
+        <h2>{this.props.playlists.length} Playlists</h2>
+      </div>
+    );
+  }
+}
+
+class HoursCounter extends Component {
+  render() {
+    let allSongs = this.props.playlists.reduce((songs, eachPlayList) => {
+      return songs.concat(eachPlayList.songs) 
+    }, [])
+    let totalDuration = allSongs.reduce((sum, eachSong) => {
+      return sum + eachSong.duration
+    }, 0)
+    return (
+      <div style={{...defaultStyle, width: '40%', display: 'inline-block'}}>
+        <h2>{Math.round(totalDuration/60/60)} Hours</h2>
       </div>
     )
   }
@@ -46,18 +87,35 @@ class Playlist extends Component {
 }
 
 class App extends Component {
+  constructor() {
+    super()
+    this.state = {serverData: {}}
+  }
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({serverData: fakeServerData})
+    }, 1000);
+    
+  }
   render() {
     return (
       <div className="App">
-        <h1 style={{...defaultStyle, 'font-size': '54px'}}>Title</h1>
-        <Aggregate />
-        <Aggregate />
+        {this.state.serverData.user ?
+        <div>
+        <h1 style={{...defaultStyle, 'font-size': '54px'}}>
+        {this.state.serverData.user && 
+          this.state.serverData.user.name}'s Playlist
+        </h1>
+        <PlayListCounter playlists = {this.state.serverData.user.playlists}/>
+        <HoursCounter playlists={this.state.serverData.user.playlists}/>
         <Filter />
         <Playlist />
         <Playlist />
         <Playlist />
         <Playlist />
-      </div>
+        </div> : <h1 style={defaultStyle}>Loading...</h1>
+        }   
+      </div> 
     );
   }
 }
